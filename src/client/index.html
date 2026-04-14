@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reych | Nutrición & Diseño Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --p: #7cb4f1;
+    --s: #172674;
+    --t: #fff3b3;
+    --w: #ffffff;
+    --light: #f0f7ff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Poppins', sans-serif; background: var(--light); color: var(--s); overflow-x: hidden; }
+
+  /* ══ NAV ══ */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 40px;
+    background: rgba(240,247,255,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(23,38,116,0.06);
+  }
+  .nav-logo { font-weight: 900; font-size: 1.25rem; color: var(--s); letter-spacing: -0.04em; }
+  .nav-logo span { color: var(--p); }
+  .nav-socials { display: flex; gap: 16px; }
+  .nav-social-link {
+    display: flex; align-items: center; gap: 6px;
+    text-decoration: none;
+    background: var(--s); color: var(--t);
+    font-size: 0.72rem; font-weight: 700;
+    padding: 7px 14px; border-radius: 100px;
+    letter-spacing: 0.02em;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .nav-social-link:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(23,38,116,0.25); }
+
+  /* ══ FLOATING FRUITS ══ */
+  .fruits-bg {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .fruit {
+    position: absolute;
+    font-size: 2.4rem;
+    opacity: 0.07;
+    animation: fruitFloat linear infinite;
+    user-select: none;
+  }
+  @keyframes fruitFloat {
+    0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    5%   { opacity: 0.07; }
+    95%  { opacity: 0.07; }
+    100% { transform: translateY(-120px) rotate(360deg); opacity: 0; }
+  }
+
+  /* ══ HERO ══ */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 120px 24px 80px;
+    position: relative; overflow: hidden;
+    background: linear-gradient(160deg, var(--s) 0%, #1e3498 55%, #0d1f5c 100%);
+    text-align: center;
+  }
+
+  .hero-circle {
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,180,241,0.15) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    pointer-events: none;
+  }
+
+  .hero-fruit {
+    position: absolute;
+    font-size: 3rem;
+    animation: heroDrift ease-in-out infinite;
+    filter: drop-shadow(0 8px 20px rgba(0,0,0,0.2));
+    pointer-events: none;
+  }
+  .hf1  { top: 12%; left: 8%;  animation-duration: 7s;  animation-delay: 0s;   font-size: 2.8rem; }
+  .hf2  { top: 20%; right: 10%; animation-duration: 9s;  animation-delay: 1s;   font-size: 3.4rem; }
+  .hf3  { top: 65%; left: 5%;  animation-duration: 8s;  animation-delay: 2s;   font-size: 2.5rem; }
+  .hf4  { top: 70%; right: 8%; animation-duration: 10s; animation-delay: 0.5s; font-size: 3rem;   }
+  .hf5  { top: 35%; left: 3%;  animation-duration: 6s;  animation-delay: 3s;   font-size: 2rem;   }
+  .hf6  { top: 45%; right: 4%; animation-duration: 11s; animation-delay: 1.5s; font-size: 2.2rem; }
+  .hf7  { top: 85%; left: 18%; animation-duration: 8s;  animation-delay: 0.8s; font-size: 2.6rem; }
+  .hf8  { top: 8%;  left: 45%; animation-duration: 9s;  animation-delay: 2.2s; font-size: 2rem;   }
+
+  @keyframes heroDrift {
+    0%,100% { transform: translateY(0) rotate(-5deg); }
+    50%      { transform: translateY(-20px) rotate(5deg); }
+  }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,243,179,0.15);
+    border: 1px solid rgba(255,243,179,0.35);
+    color: var(--t);
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; padding: 7px 20px; border-radius: 100px;
+    margin-bottom: 32px; position: relative; z-index: 2;
+    animation: fadeUp 0.8s ease both;
+  }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--t); animation: pulse 1.5s ease infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.5)} }
+
+  .hero h1 {
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-weight: 900; line-height: 0.95;
+    color: var(--w); letter-spacing: -0.04em;
+    position: relative; z-index: 2;
+    animation: fadeUp 1s ease both;
+  }
+  .hero h1 .name {
+    display: block;
+    background: linear-gradient(135deg, var(--p) 0%, var(--t) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    font-size: 1.2em;
+  }
+
+  .hero-desc {
+    max-width: 580px; margin: 28px auto 0;
+    font-size: 1.05rem; line-height: 1.75;
+    color: rgba(255,255,255,0.75);
+    position: relative; z-index: 2;
+    animation: fadeUp 1.1s ease both;
+  }
+
+  .hero-socials {
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    margin-top: 32px;
+    position: relative; z-index: 2;
+    animation: fadeUp 1.2s ease both;
+  }
+  .social-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--w); text-decoration: none;
+    font-size: 0.85rem; font-weight: 700;
+    padding: 10px 22px; border-radius: 100px;
+    transition: background 0.25s, transform 0.25s;
+  }
+  .social-pill:hover { background: rgba(255,255,255,0.2); transform: translateY(-3px); }
+  .social-pill .sp-icon { font-size: 1.1rem; }
+
+  .hero-tags {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    margin-top: 24px;
+    position: relative; z-index: 2;
+    animation: fadeUp 1.3s ease both;
+  }
+  .htag {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(124,180,241,0.15);
+    border: 1px solid rgba(124,180,241,0.3);
+    color: var(--t); font-size: 0.8rem; font-weight: 600;
+    padding: 8px 18px; border-radius: 100px;
+  }
+
+  .hero-scroll {
+    position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+    z-index: 2;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    color: rgba(255,255,255,0.4); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+    animation: fadeUp 1.6s ease both;
+  }
+  .scroll-arrow { font-size: 1.2rem; animation: bounce 1.5s ease infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ══ MARQUEE ══ */
+  .strip {
+    background: var(--t); overflow: hidden; padding: 16px 0;
+    position: relative; z-index: 10;
+  }
+  .strip-inner { display: inline-flex; animation: marquee 25s linear infinite; }
+  .strip-item {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-size: 0.85rem; font-weight: 800; color: var(--s);
+    padding: 0 28px; white-space: nowrap; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* ══ ABOUT ══ */
+  .about {
+    padding: 100px 40px;
+    background: var(--w);
+    position: relative; overflow: hidden;
+  }
+  .about-wrap { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+
+  .about-left { position: relative; }
+  .about-emoji-card {
+    background: linear-gradient(135deg, var(--s) 0%, #1e3498 100%);
+    border-radius: 32px; padding: 48px 40px; text-align: center;
+    box-shadow: 0 24px 64px rgba(23,38,116,0.2);
+    position: relative; overflow: hidden;
+  }
+  .about-emoji-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 20% 20%, rgba(124,180,241,0.3), transparent 60%);
+  }
+  .big-emoji { font-size: 6rem; display: block; margin-bottom: 16px; position: relative; z-index: 1; }
+  .about-emoji-card h3 { color: var(--t); font-size: 1.4rem; font-weight: 800; z-index: 1; position: relative; }
+  .about-emoji-card p { color: rgba(255,255,255,0.65); font-size: 0.88rem; margin-top: 8px; z-index: 1; position: relative; }
+
+  .fruit-row {
+    display: flex; gap: 12px; justify-content: center;
+    margin-top: 20px; position: relative; z-index: 1;
+  }
+  .fruit-bubble {
+    width: 48px; height: 48px; border-radius: 16px;
+    background: rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    transition: transform 0.2s;
+  }
+  .fruit-bubble:hover { transform: scale(1.15) rotate(5deg); }
+
+  .section-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--t); color: var(--s);
+    font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em;
+    text-transform: uppercase; padding: 6px 16px; border-radius: 100px;
+    margin-bottom: 20px;
+  }
+  .about-right h2 {
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 900; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 18px;
+  }
+  .about-right h2 span { color: var(--p); }
+  .about-right p { font-size: 0.95rem; line-height: 1.85; opacity: 0.72; margin-bottom: 32px; }
+
+  .about-cards { display: flex; flex-direction: column; gap: 12px; }
+  .about-card {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--light); border-radius: 16px; padding: 16px 20px;
+    border: 1px solid rgba(23,38,116,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .about-card:hover { transform: translateX(6px); box-shadow: 0 8px 24px rgba(23,38,116,0.08); }
+  .about-card-icon {
+    width: 46px; height: 46px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--p), #5a9de8);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; flex-shrink: 0;
+  }
+  .about-card h4 { font-size: 0.92rem; font-weight: 700; }
+  .about-card p { font-size: 0.78rem; opacity: 0.6; margin-top: 2px; }
+
+  /* ══ PLANTILLAS ══ */
+  .plantillas {
+    padding: 100px 40px;
+    background: linear-gradient(160deg, var(--s) 0%, #1e3498 100%);
+    position: relative; overflow: hidden;
+  }
+  .plantillas-top {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: start;
+    max-width: 1100px; margin: 0 auto 60px;
+  }
+  .plantillas h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; color: var(--w); line-height: 1.05; letter-spacing: -0.03em; }
+  .plantillas h2 span { color: var(--t); }
+  .plantillas-desc { color: rgba(255,255,255,0.65); font-size: 0.95rem; line-height: 1.85; }
+
+  .plantillas::before {
+    content: '🥑🍊🍓🥦🍋🫐🍇🥝';
+    position: absolute; right: -40px; top: 40px;
+    font-size: 8rem; opacity: 0.04; letter-spacing: 8px;
+    line-height: 1.2; pointer-events: none;
+  }
+
+  .cards-grid {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+  }
+  .pcard {
+    border-radius: 24px; padding: 32px 26px;
+    position: relative; overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s;
+    cursor: default;
+  }
+  .pcard:hover { transform: translateY(-8px); box-shadow: 0 24px 56px rgba(0,0,0,0.25); }
+
+  .pc-blue  { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); }
+  .pc-light { background: var(--t); color: var(--s); }
+  .pc-prim  { background: var(--p); color: var(--s); }
+
+  .pcard-emoji { font-size: 3rem; margin-bottom: 18px; display: block; line-height: 1; }
+  .pcard h3 { font-size: 1rem; font-weight: 800; margin-bottom: 8px; line-height: 1.3; }
+  .pc-blue h3 { color: var(--w); }
+  .pcard p { font-size: 0.83rem; line-height: 1.65; }
+  .pc-blue p { color: rgba(255,255,255,0.65); }
+  .pc-light p, .pc-prim p { opacity: 0.75; }
+
+  .pcard-tag {
+    display: inline-block; margin-top: 14px;
+    padding: 4px 12px; border-radius: 100px;
+    font-size: 0.72rem; font-weight: 700;
+  }
+  .pc-blue .pcard-tag  { background: rgba(255,243,179,0.2); color: var(--t); }
+  .pc-light .pcard-tag { background: rgba(23,38,116,0.12); color: var(--s); }
+  .pc-prim .pcard-tag  { background: rgba(23,38,116,0.12); color: var(--s); }
+
+  /* ══ BENEFITS BAR ══ */
+  .benefits {
+    background: var(--t);
+    padding: 60px 40px;
+  }
+  .benefits-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+    text-align: center;
+  }
+  .ben-icon { font-size: 2.4rem; display: block; margin-bottom: 10px; }
+  .ben-num { font-size: 2.2rem; font-weight: 900; color: var(--s); line-height: 1; }
+  .ben-label { font-size: 0.8rem; color: var(--s); opacity: 0.6; font-weight: 600; margin-top: 4px; }
+
+  /* ══ PERSONALIZADOS ══ */
+  .custom {
+    padding: 100px 40px; background: var(--w);
+    position: relative; overflow: hidden;
+  }
+  .custom::after {
+    content: '🎨✨🎬🖥️📱';
+    position: absolute; left: -20px; bottom: 20px;
+    font-size: 7rem; opacity: 0.04; pointer-events: none; line-height: 1;
+  }
+  .custom-inner { max-width: 1100px; margin: 0 auto; }
+  .custom-inner > .section-pill { background: var(--s); color: var(--t); margin-bottom: 20px; }
+  .custom-inner h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 16px; }
+  .custom-inner h2 span { color: var(--p); }
+  .custom-inner > p { font-size: 0.95rem; line-height: 1.8; opacity: 0.65; max-width: 560px; margin-bottom: 48px; }
+
+  .custom-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .cg-card {
+    display: flex; gap: 18px;
+    background: var(--light); border-radius: 20px; padding: 24px 22px;
+    border: 1px solid rgba(23,38,116,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .cg-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(23,38,116,0.1); }
+  .cg-icon {
+    width: 56px; height: 56px; border-radius: 18px;
+    background: linear-gradient(135deg, var(--s), #1e3498);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; flex-shrink: 0;
+  }
+  .cg-text h4 { font-size: 0.98rem; font-weight: 800; color: var(--s); margin-bottom: 4px; }
+  .cg-text p { font-size: 0.82rem; line-height: 1.65; opacity: 0.6; }
+
+  /* ══ GIFT ══ */
+  .gift {
+    padding: 100px 40px;
+    background: linear-gradient(160deg, var(--s) 0%, #0d1f5c 100%);
+    position: relative; overflow: hidden;
+  }
+  .gift-inner { max-width: 1100px; margin: 0 auto; text-align: center; }
+  .gift-inner .section-pill { background: rgba(255,243,179,0.15); color: var(--t); border: 1px solid rgba(255,243,179,0.3); margin-bottom: 24px; }
+  .gift-inner h2 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; color: var(--w); line-height: 1.05; letter-spacing: -0.04em; margin-bottom: 16px; }
+  .gift-inner h2 span { color: var(--t); }
+  .gift-inner > p { color: rgba(255,255,255,0.65); font-size: 0.98rem; line-height: 1.8; max-width: 560px; margin: 0 auto 48px; }
+
+  .gift-card {
+    background: linear-gradient(135deg, rgba(124,180,241,0.15), rgba(255,243,179,0.08));
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 32px; padding: 56px 48px;
+    max-width: 700px; margin: 0 auto;
+    position: relative; overflow: hidden;
+  }
+  .gift-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(124,180,241,0.2), transparent 65%);
+    pointer-events: none;
+  }
+  .gift-fruits {
+    display: flex; justify-content: center; gap: 8px; font-size: 2.4rem;
+    margin-bottom: 28px; position: relative; z-index: 1;
+  }
+  .gift-fruits span { animation: heroDrift ease-in-out infinite; display: inline-block; }
+  .gift-fruits span:nth-child(1){animation-duration:5s;animation-delay:0s}
+  .gift-fruits span:nth-child(2){animation-duration:6s;animation-delay:0.5s}
+  .gift-fruits span:nth-child(3){animation-duration:4.5s;animation-delay:1s}
+  .gift-fruits span:nth-child(4){animation-duration:7s;animation-delay:0.2s}
+  .gift-fruits span:nth-child(5){animation-duration:5.5s;animation-delay:1.5s}
+
+  .gift-card h3 { font-size: 1.5rem; font-weight: 900; color: var(--t); margin-bottom: 12px; position: relative; z-index: 1; }
+  .gift-card p { color: rgba(255,255,255,0.7); font-size: 0.93rem; line-height: 1.8; margin-bottom: 24px; position: relative; z-index: 1; }
+  .gift-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--t); color: var(--s);
+    font-weight: 800; font-size: 0.88rem;
+    padding: 12px 28px; border-radius: 100px;
+    position: relative; z-index: 1;
+    box-shadow: 0 8px 24px rgba(255,243,179,0.3);
+  }
+
+  /* ══ REDES ══ */
+  .redes {
+    padding: 80px 40px;
+    background: var(--t);
+  }
+  .redes-inner { max-width: 700px; margin: 0 auto; text-align: center; }
+  .redes-inner h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 900; color: var(--s); margin-bottom: 12px; letter-spacing: -0.03em; }
+  .redes-inner p { color: var(--s); opacity: 0.65; font-size: 0.95rem; margin-bottom: 36px; line-height: 1.7; }
+
+  .redes-cards { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+  .red-card {
+    flex: 1; min-width: 240px; max-width: 300px;
+    background: var(--s); border-radius: 24px; padding: 36px 28px;
+    text-align: center; text-decoration: none;
+    position: relative; overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s;
+    box-shadow: 0 8px 32px rgba(23,38,116,0.2);
+  }
+  .red-card:hover { transform: translateY(-8px) rotate(-1deg); box-shadow: 0 24px 56px rgba(23,38,116,0.3); }
+  .red-card::before {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 160px; height: 160px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,180,241,0.25), transparent);
+  }
+  .red-icon { font-size: 3rem; display: block; margin-bottom: 12px; }
+  .red-handle { color: var(--t); font-size: 1.15rem; font-weight: 900; display: block; margin-bottom: 6px; letter-spacing: -0.02em; }
+  .red-sub { color: rgba(255,255,255,0.5); font-size: 0.78rem; }
+
+  /* ══ FOOTER ══ */
+  footer {
+    background: #0b1540;
+    padding: 60px 40px 40px;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  footer::before {
+    content: '🥑🍓🍊🥝🍋🫐';
+    position: absolute; bottom: -20px; left: 0; right: 0;
+    font-size: 5rem; opacity: 0.03; text-align: center; pointer-events: none;
+  }
+  .footer-logo { font-size: 2rem; font-weight: 900; color: var(--w); letter-spacing: -0.04em; margin-bottom: 10px; }
+  .footer-logo span { color: var(--p); }
+  .footer-socials { display: flex; gap: 12px; justify-content: center; margin: 20px 0; flex-wrap: wrap; }
+  .footer-social {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    color: var(--t); text-decoration: none; font-size: 0.82rem; font-weight: 700;
+    padding: 8px 18px; border-radius: 100px;
+    transition: background 0.2s;
+  }
+  .footer-social:hover { background: rgba(255,255,255,0.12); }
+  footer p { color: rgba(255,255,255,0.25); font-size: 0.78rem; margin-top: 24px; }
+
+  /* ══ REVEAL ══ */
+  .r { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+  .r.v { opacity: 1; transform: translateY(0); }
+  .d1{transition-delay:.1s} .d2{transition-delay:.2s} .d3{transition-delay:.3s} .d4{transition-delay:.4s}
+
+  /* ══ RESPONSIVE ══ */
+  @media(max-width:900px){
+    nav { padding: 12px 20px; }
+    .nav-social-link { font-size: 0.65rem; padding: 6px 10px; }
+    .about-wrap, .plantillas-top, .custom-grid { grid-template-columns: 1fr; gap: 40px; }
+    .cards-grid { grid-template-columns: 1fr 1fr; }
+    .benefits-inner { grid-template-columns: repeat(2,1fr); }
+    .about, .plantillas, .custom, .gift, .redes { padding: 70px 24px; }
+    .hf5,.hf6,.hf7,.hf8 { display: none; }
+  }
+  @media(max-width:600px){
+    .cards-grid { grid-template-columns: 1fr; }
+    .benefits-inner { grid-template-columns: repeat(2,1fr); }
+    .gift-card { padding: 36px 24px; }
+
+    /* Formulario en móvil */
+    .form-container input,
+    .form-container textarea {
+      width: 100% !important;
+      font-size: 16px !important;
+    }
+    .form-container > form > div {
+      grid-template-columns: 1fr !important;
+    }
+
+    /* About section en móvil */
+    .about-wrap {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+    }
+    .about-left {
+      width: 100% !important;
+      display: flex !important;
+      justify-content: center !important;
+    }
+    .about-emoji-card {
+      max-width: 100% !important;
+      width: 100% !important;
+    }
+    .about-right {
+      width: 100% !important;
+      text-align: center !important;
+    }
+    .about-cards {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+    }
+    .about-card {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="fruits-bg" id="fruitsBg"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Rey<span>ch</span></div>
+  <div class="nav-socials">
+    <a href="https://instagram.com/nutribyreych" target="_blank" class="nav-social-link">📱 @nutribyreych</a>
+    <a href="https://instagram.com/nutristudiocr" target="_blank" class="nav-social-link">🎨 @nutristudiocr</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-circle"></div>
+  <div class="hero-fruit hf1">🍓</div>
+  <div class="hero-fruit hf2">🥑</div>
+  <div class="hero-fruit hf3">🍊</div>
+  <div class="hero-fruit hf4">🥝</div>
+  <div class="hero-fruit hf5">🍋</div>
+  <div class="hero-fruit hf6">🫐</div>
+  <div class="hero-fruit hf7">🍇</div>
+  <div class="hero-fruit hf8">🥦</div>
+
+  <div class="badge"><div class="badge-dot"></div> Nutrición & Diseño Digital</div>
+  <h1>
+    Hola, soy
+    <span class="name">Reych ✨</span>
+  </h1>
+  <p class="hero-desc">
+    Estudiante de nutrición, creadora de contenido y diseñadora de plantillas profesionales
+    para nutricionistas. Aquí encontrarás todo lo que necesitas para elevar tu consulta.
+  </p>
+  <div class="hero-tags">
+    <span class="htag">🎓 Estudiante de Nutrición</span>
+    <span class="htag">📱 Creadora de Contenido</span>
+    <span class="htag">🎨 Diseñadora Digital</span>
+    <span class="htag">📋 Plantillas pro</span>
+  </div>
+  <div class="hero-socials">
+    <a href="https://instagram.com/nutribyreych" target="_blank" class="social-pill">
+      <span class="sp-icon">📸</span> @nutribyreych
+    </a>
+    <a href="https://instagram.com/nutristudiocr" target="_blank" class="social-pill">
+      <span class="sp-icon">🎨</span> @nutristudiocr
+    </a>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-arrow">↓</div>
+    Scroll
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="strip">
+  <div class="strip-inner">
+    <span class="strip-item">🥑 Plantillas para nutricionistas</span>
+    <span class="strip-item">🍓 Planes de alimentación</span>
+    <span class="strip-item">🍊 Listas de intercambio</span>
+    <span class="strip-item">🥝 Recetario mensual gratis</span>
+    <span class="strip-item">🫐 Diseño profesional</span>
+    <span class="strip-item">🍋 Pedidos personalizados</span>
+    <span class="strip-item">🥦 Contenido de valor</span>
+    <span class="strip-item">🥑 Plantillas para nutricionistas</span>
+    <span class="strip-item">🍓 Planes de alimentación</span>
+    <span class="strip-item">🍊 Listas de intercambio</span>
+    <span class="strip-item">🥝 Recetario mensual gratis</span>
+    <span class="strip-item">🫐 Diseño profesional</span>
+    <span class="strip-item">🍋 Pedidos personalizados</span>
+    <span class="strip-item">🥦 Contenido de valor</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="sobre">
+  <div class="about-wrap">
+    <div class="about-left r">
+      <div class="about-emoji-card">
+        <span class="big-emoji">👩‍⚕️</span>
+        <h3>Reych</h3>
+        <p>Nutrición · Diseño · Contenido Digital</p>
+        <div class="fruit-row">
+          <div class="fruit-bubble">🥑</div>
+          <div class="fruit-bubble">🍓</div>
+          <div class="fruit-bubble">🍊</div>
+          <div class="fruit-bubble">🥝</div>
+          <div class="fruit-bubble">🫐</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-right r d2">
+      <div class="section-pill">🌿 Sobre mí</div>
+      <h2>Tu aliada para una consulta<br><span>de alto impacto</span></h2>
+      <p>
+        Combino mi formación en nutrición con el mundo del diseño digital para crear
+        herramientas que te ahorren tiempo, eleven la calidad de tus materiales y hagan
+        que tus pacientes vivan una experiencia diferente desde el primer día.
+      </p>
+      <div class="about-cards">
+        <div class="about-card">
+          <div class="about-card-icon">🎓</div>
+          <div>
+            <h4>Estudiante de Nutrición</h4>
+            <p>Base científica en cada material que diseño</p>
+          </div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">📱</div>
+          <div>
+            <h4>Creadora & Diseñadora de Contenido</h4>
+            <p>Redes sociales que posicionan y conectan</p>
+          </div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">✨</div>
+          <div>
+            <h4>Plantillas para Nutricionistas</h4>
+            <p>Educativas, informativas y de valor real</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANTILLAS -->
+<section class="plantillas" id="plantillas">
+  <div class="plantillas-top">
+    <div class="r">
+      <div class="section-pill">🍽️ Plantillas</div>
+      <h2>Recursos que <span>transforman</span> tu consulta</h2>
+    </div>
+    <p class="plantillas-desc r d2">
+      Desde materiales informativos para el paciente hasta planes de alimentación listos para editar.
+      Solo llena los espacios y entrega contenido profesional que hace la diferencia dentro y fuera de consulta.
+    </p>
+  </div>
+  <div class="cards-grid">
+    <div class="pcard pc-blue r d1">
+      <span class="pcard-emoji">📄</span>
+      <h3>Informativas para el paciente</h3>
+      <p>Materiales claros, visuales y atractivos que tus pacientes realmente van a leer y recordar.</p>
+      <span class="pcard-tag">Educativas · Informativas</span>
+    </div>
+    <div class="pcard pc-light r d2">
+      <span class="pcard-emoji">🍽️</span>
+      <h3>Planes de alimentación editables</h3>
+      <p>Solo llena los espacios. Diseños profesionales listos para personalizar con cada paciente.</p>
+      <span class="pcard-tag">Editable en Canva</span>
+    </div>
+    <div class="pcard pc-prim r d3">
+      <span class="pcard-emoji">🔄</span>
+      <h3>Listas de intercambio</h3>
+      <p>Recursos bien organizados para facilitar la educación nutricional de forma visual.</p>
+      <span class="pcard-tag">Material de consulta</span>
+    </div>
+    <div class="pcard pc-light r d1">
+      <span class="pcard-emoji">🛒</span>
+      <h3>Productos recomendados</h3>
+      <p>Guías visuales para orientar a tus pacientes en sus elecciones de compra del día a día.</p>
+      <span class="pcard-tag">Guías prácticas</span>
+    </div>
+    <div class="pcard pc-blue r d2">
+      <span class="pcard-emoji">⏱️</span>
+      <h3>Ahorra tiempo valioso</h3>
+      <p>Menos horas diseñando, más tiempo con tus pacientes. Así de simple y así de efectivo.</p>
+      <span class="pcard-tag">Dentro y fuera de consulta</span>
+    </div>
+    <div class="pcard pc-prim r d3">
+      <span class="pcard-emoji">💎</span>
+      <h3>Aumenta el valor de tu consulta</h3>
+      <p>Materiales premium que elevan la percepción de tu servicio y fidelizan a tus pacientes.</p>
+      <span class="pcard-tag">Valor percibido ↑</span>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section class="benefits">
+  <div class="benefits-inner">
+    <div class="ben r">
+      <span class="ben-icon">📋</span>
+      <div class="ben-num">+10</div>
+      <div class="ben-label">Tipos de plantillas</div>
+    </div>
+    <div class="ben r d1">
+      <span class="ben-icon">✏️</span>
+      <div class="ben-num">100%</div>
+      <div class="ben-label">Editables en Canva</div>
+    </div>
+    <div class="ben r d2">
+      <span class="ben-icon">🎁</span>
+      <div class="ben-num">1/mes</div>
+      <div class="ben-label">Recetario gratis</div>
+    </div>
+    <div class="ben r d3">
+      <span class="ben-icon">💛</span>
+      <div class="ben-num">∞</div>
+      <div class="ben-label">Amor por la nutrición</div>
+    </div>
+  </div>
+</section>
+
+<!-- PERSONALIZADOS -->
+<section class="custom" id="personalizados">
+  <div class="custom-inner">
+    <div class="section-pill r">🎨 Pedidos personalizados</div>
+    <h2 class="r">¿Necesitas algo <span>a tu medida</span>?</h2>
+    <p class="r d1">
+      Lo hago realidad. Desde presentaciones profesionales hasta edición de video.
+      Si lo imaginas, lo creamos juntas.
+    </p>
+    <div class="custom-grid">
+      <div class="cg-card r d1">
+        <div class="cg-icon">🖥️</div>
+        <div class="cg-text">
+          <h4>Presentaciones en Canva</h4>
+          <p>Estilo PowerPoint, diseño profesional y listo para presentar a tus pacientes o en eventos.</p>
+        </div>
+      </div>
+      <div class="cg-card r d2">
+        <div class="cg-icon">🎬</div>
+        <div class="cg-text">
+          <h4>Edición de video</h4>
+          <p>Para reels, clases online, contenido educativo o cualquier video que necesites.</p>
+        </div>
+      </div>
+      <div class="cg-card r d3">
+        <div class="cg-icon">📱</div>
+        <div class="cg-text">
+          <h4>Contenido para redes sociales</h4>
+          <p>Posts, stories, carruseles y más. Diseñados para conectar con tu audiencia.</p>
+        </div>
+      </div>
+      <div class="cg-card r d4">
+        <div class="cg-icon">✨</div>
+        <div class="cg-text">
+          <h4>Cualquier recurso digital</h4>
+          <p>Si lo necesitas y no lo ves aquí, escríbeme. Seguro encontramos la forma.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GIFT -->
+<section class="gift" id="comunidad">
+  <div class="gift-inner">
+    <div class="section-pill r">🌟 Comunidad</div>
+    <h2 class="r">Gracias por ser parte<br>de <span>esta comunidad 💛</span></h2>
+    <p class="r d1">
+      Quédate, porque cada mes estaré dando regalías de recetarios bien diseñados
+      y listos para que se los puedas dar a tus pacientes.
+    </p>
+    <div class="gift-card r d2">
+      <div class="gift-fruits">
+        <span>🥑</span><span>🍓</span><span>🎁</span><span>🍊</span><span>🥝</span>
+      </div>
+      <h3>🎁 Recetario mensual GRATIS</h3>
+      <p>
+        Cada mes comparto un recetario nutritivo y visualmente atractivo para que lo descargues
+        y se lo regales a tus pacientes. Es mi forma de decirte gracias.
+      </p>
+      <div class="gift-chip">✨ Cada mes, sin falta</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section class="custom" id="contacto">
+  <div class="custom-inner">
+    <div class="section-pill r">💌 Contacto</div>
+    <h2 class="r">¿Preguntas o <span>consultas</span>?</h2>
+    <p class="r d1">
+      Llena el formulario y me pondré en contacto lo antes posible.
+      También puedes escribirme directamente en Instagram.
+    </p>
+
+    <div class="form-container r d2" style="max-width: 600px; margin: 0 auto;">
+      <form id="contactForm" style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; grid-auto-flow: row;">
+          <input
+            type="text"
+            id="name"
+            placeholder="Tu nombre"
+            required
+            style="padding: 12px 16px; border: 1px solid rgba(23,38,116,0.2); border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.95rem; min-width: 0;"
+          >
+          <input
+            type="email"
+            id="email"
+            placeholder="Tu email"
+            required
+            style="padding: 12px 16px; border: 1px solid rgba(23,38,116,0.2); border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.95rem; min-width: 0;"
+          >
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; grid-auto-flow: row;">
+          <input
+            type="tel"
+            id="phone"
+            placeholder="Tu teléfono"
+            required
+            style="padding: 12px 16px; border: 1px solid rgba(23,38,116,0.2); border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.95rem; min-width: 0;"
+          >
+          <input
+            type="text"
+            id="country"
+            placeholder="País (ej: Costa Rica)"
+            style="padding: 12px 16px; border: 1px solid rgba(23,38,116,0.2); border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.95rem; min-width: 0;"
+          >
+        </div>
+
+        <input
+          type="text"
+          id="subject"
+          placeholder="Asunto (ej: Pedido personalizado)"
+          required
+          style="padding: 12px 16px; border: 1px solid rgba(23,38,116,0.2); border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.95rem;"
+        >
+
+        <textarea
+          id="message"
+          placeholder="Cuéntame más..."
+          rows="5"
+          required
+          style="padding: 12px 16px; border: 1px solid rgba(23,38,116,0.2); border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.95rem; resize: vertical;"
+        ></textarea>
+
+        <button
+          type="submit"
+          id="submitBtn"
+          style="padding: 14px 32px; background: linear-gradient(135deg, #7cb4f1, #5a9de8); color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;"
+          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 24px rgba(124,180,241,0.3)'"
+          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
+        >
+          Enviar Mensaje ✨
+        </button>
+
+        <div id="formMessage" style="text-align: center; font-size: 0.9rem; display: none;"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- REDES -->
+<section class="redes" id="redes">
+  <div class="redes-inner">
+    <h2 class="r">Encuéntrame en redes 📱</h2>
+    <p class="r d1">Sígueme para no perderte ningún recurso, plantilla gratuita ni novedad de la comunidad.</p>
+    <div class="redes-cards">
+      <a href="https://instagram.com/nutribyreych" target="_blank" class="red-card r d1">
+        <span class="red-icon">🥗</span>
+        <span class="red-handle">@nutribyreych</span>
+        <span class="red-sub">Contenido de nutrición & salud</span>
+      </a>
+      <a href="https://instagram.com/nutristudiocr" target="_blank" class="red-card r d2">
+        <span class="red-icon">🎨</span>
+        <span class="red-handle">@nutristudiocr</span>
+        <span class="red-sub">Plantillas, diseño & recursos</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Rey<span>ch</span></div>
+  <div class="footer-socials">
+    <a href="https://instagram.com/nutribyreych" target="_blank" class="footer-social">📸 @nutribyreych</a>
+    <a href="https://instagram.com/nutristudiocr" target="_blank" class="footer-social">🎨 @nutristudiocr</a>
+  </div>
+  <p>Nutrición · Diseño Digital · Plantillas para nutricionistas · Comunidad mensual</p>
+  <p style="margin-top:8px">Hecho con 💙 y mucho amor por la nutrición</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const els = document.querySelectorAll('.r');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('v'); io.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  els.forEach(el => io.observe(el));
+
+  // Generate floating background fruits
+  const fruitsArr = ['🍓','🥑','🍊','🥝','🍋','🫐','🍇','🥦','🍑','🍈','🌿','🫛'];
+  const bg = document.getElementById('fruitsBg');
+  for(let i = 0; i < 18; i++){
+    const d = document.createElement('div');
+    d.className = 'fruit';
+    d.textContent = fruitsArr[Math.floor(Math.random()*fruitsArr.length)];
+    d.style.left = Math.random()*100 + '%';
+    d.style.animationDuration = (12 + Math.random()*20) + 's';
+    d.style.animationDelay = (Math.random()*18) + 's';
+    d.style.fontSize = (1.5 + Math.random()*2) + 'rem';
+    bg.appendChild(d);
+  }
+
+  // Formulario de contacto
+  const form = document.getElementById('contactForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const formMessage = document.getElementById('formMessage');
+
+  // URL de tu Apps Script deployment
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/d/1BcoGRhbIBZEUJtRFlw76kxOzAaZNTwoEGVXrFo8-PMcMo7zRM5dK70s3/userweb';
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const formData = {
+      name: document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      phone: document.getElementById('phone').value,
+      country: document.getElementById('country').value,
+      subject: document.getElementById('subject').value,
+      message: document.getElementById('message').value
+    };
+
+    // Mostrar estado "enviando"
+    submitBtn.disabled = true;
+    submitBtn.textContent = '⏳ Enviando...';
+    formMessage.style.display = 'none';
+
+    // Llamar al Apps Script via fetch
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ data: formData })
+    })
+      .then(response => response.json())
+      .then(result => {
+        if (result.success) {
+          formMessage.style.color = '#4ade80';
+          formMessage.textContent = '✅ ' + result.message;
+          form.reset();
+        } else {
+          formMessage.style.color = '#ef4444';
+          formMessage.textContent = '❌ Error: ' + result.message;
+        }
+        formMessage.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Enviar Mensaje ✨';
+      })
+      .catch(error => {
+        formMessage.style.color = '#ef4444';
+        formMessage.textContent = '❌ Error al enviar: ' + error.message;
+        formMessage.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Enviar Mensaje ✨';
+      });
+  });
+</script>
+</body>
+</html>
