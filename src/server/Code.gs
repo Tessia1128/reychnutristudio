@@ -2,9 +2,11 @@
  * REYCH Landing Page — Google Apps Script
  * API Backend para formulario de contacto
  * Guarda datos en Google Sheets
+ * Webhook handler para Netlify deployments
  */
 
 const SHEET_ID = "17ub7gbSBi70DTidbID3jM-ZLLD69lu2JxlxAbCSwykQ";
+const NETLIFY_SECRET = "reych-secret-2024-xyzabc123"; // Debe coincidir con variable de Netlify
 
 /**
  * Endpoint POST para procesar el formulario
@@ -55,13 +57,28 @@ function doPost(e) {
 
 /**
  * Construir respuesta con headers CORS
+ * @param {boolean} success - Indica si la operación fue exitosa
+ * @param {string|object} data - Mensaje (string) o datos (object)
  */
-function buildResponse(success, message) {
-  return ContentService
-    .createTextOutput(JSON.stringify({
+function buildResponse(success, data) {
+  let response;
+
+  // Si data es un string, es un mensaje (compatibilidad backwards)
+  if (typeof data === 'string') {
+    response = {
       success: success,
-      message: message
-    }))
+      message: data
+    };
+  } else {
+    // Si es un objeto, es data estructurada
+    response = {
+      success: success,
+      data: data
+    };
+  }
+
+  return ContentService
+    .createTextOutput(JSON.stringify(response))
     .setMimeType(ContentService.MimeType.JSON)
     .setHeader('Access-Control-Allow-Origin', '*')
     .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
@@ -78,3 +95,73 @@ function doOptions(e) {
     .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
     .setHeader('Access-Control-Allow-Headers', 'Content-Type');
 }
+
+/**
+ * Endpoint GET para health checks y Netlify webhooks
+ * Uso: /apps/macros/d/{SCRIPT_ID}/usercontent/v1/?path=status&secret={NETLIFY_SECRET}
+ */
+function doGet(e) {
+  try {
+    const path = e.parameter.path || '';
+    const secret = e.parameter.secret || '';
+
+    // Health check (sin autenticación)
+    if (path === 'status') {
+      return buildResponse(true, {
+        status: 'ok',
+        message: 'REYCH backend is running',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    // Validar secret de Netlify para otras rutas
+    if (secret !== NETLIFY_SECRET) {
+      return buildResponse(false, { error: 'Unauthorized' });
+    }
+
+    // Webhook de Netlify deployment
+    if (path === 'netlify-webhook') {
+      logDeployment({
+        timestamp: new Date().toISOString(),
+        event: 'netlify_deployment',
+        deployId: e.parameter.deployId || 'unknown',
+        branch: e.parameter.branch || 'unknown'
+      });
+
+      return buildResponse(true, {
+        message: 'Deployment logged successfully',
+        deployId: e.parameter.deployId
+      });
+    }
+
+    return buildResponse(false, { error: 'Not found' });
+  } catch (error) {
+    return buildResponse(false, { error: error.message });
+  }
+}
+
+/**
+ * Registrar deployments en Google Sheets
+ */
+function logDeployment(deploymentData) {
+  try {
+    const ss = SpreadsheetApp.openById(SHEET_ID);
+    let sheet = ss.getSheetByName('Deployments');
+
+    if (!sheet) {
+      sheet = ss.insertSheet('Deployments');
+      sheet.appendRow(['Timestamp', 'Event', 'Deploy ID', 'Branch', 'Status']);
+    }
+
+    sheet.appendRow([
+      deploymentData.timestamp,
+      deploymentData.event,
+      deploymentData.deployId,
+      deploymentData.branch,
+      'Logged'
+    ]);
+  } catch (error) {
+    Logger.log('Error logging deployment: ' + error.message);
+  }
+}
+
