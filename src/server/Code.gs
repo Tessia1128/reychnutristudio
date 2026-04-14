@@ -29,11 +29,11 @@ function doPost(e) {
 
     // Guardar en Google Sheets
     const ss = SpreadsheetApp.openById(SHEET_ID);
-    let sheet = ss.getSheetByName('Contactos Landing');
+    let sheet = ss.getSheetByName('Contactos');
 
     if (!sheet) {
-      Logger.log('Creating new sheet: Contactos Landing');
-      sheet = ss.insertSheet('Contactos Landing');
+      Logger.log('Creating new sheet: Contactos');
+      sheet = ss.insertSheet('Contactos');
       sheet.appendRow([
         'Fecha',
         'Nombre',
@@ -90,12 +90,13 @@ function buildResponse(success, data) {
     };
   }
 
-  return ContentService
-    .createTextOutput(JSON.stringify(response))
-    .setMimeType(ContentService.MimeType.JSON)
-    .setHeader('Access-Control-Allow-Origin', '*')
-    .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-    .setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  // No se pueden encadenar los métodos en Google Apps Script
+  const output = ContentService.createTextOutput(JSON.stringify(response));
+  output.setMimeType(ContentService.MimeType.JSON);
+  output.setHeader('Access-Control-Allow-Origin', '*');
+  output.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  output.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  return output;
 }
 
 /**
