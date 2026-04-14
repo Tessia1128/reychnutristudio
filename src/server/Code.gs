@@ -13,11 +13,17 @@ const NETLIFY_SECRET = "reych-secret-2024-xyzabc123"; // Debe coincidir con vari
  */
 function doPost(e) {
   try {
+    Logger.log('=== FORM SUBMISSION RECEIVED ===');
+    Logger.log('Payload: ' + e.postData.contents);
+
     const payload = JSON.parse(e.postData.contents);
     const formData = payload.data;
 
+    Logger.log('Form Data: ' + JSON.stringify(formData));
+
     // Validar campos requeridos
     if (!formData.name || !formData.email || !formData.phone) {
+      Logger.log('ERROR: Missing required fields');
       return buildResponse(false, 'El nombre, email y teléfono son requeridos');
     }
 
@@ -26,6 +32,7 @@ function doPost(e) {
     let sheet = ss.getSheetByName('Contactos');
 
     if (!sheet) {
+      Logger.log('Creating new sheet: Contactos');
       sheet = ss.insertSheet('Contactos');
       sheet.appendRow([
         'Fecha',
@@ -39,19 +46,25 @@ function doPost(e) {
     }
 
     // Agregar fila con los datos del formulario
-    sheet.appendRow([
+    const newRow = [
       new Date(),
       formData.name,
       formData.email,
       formData.phone,
       formData.country || '(No especificado)',
-      formData.subject,
-      formData.message
-    ]);
+      formData.subject || '(Sin asunto)',
+      formData.message || '(Sin mensaje)'
+    ];
+
+    Logger.log('Appending row: ' + JSON.stringify(newRow));
+    sheet.appendRow(newRow);
+    Logger.log('Row appended successfully');
 
     return buildResponse(true, '¡Mensaje recibido! Pronto me pondré en contacto.');
   } catch (error) {
-    return buildResponse(false, error.message);
+    Logger.log('ERROR: ' + error.message);
+    Logger.log('Stack: ' + error.stack);
+    return buildResponse(false, 'Error: ' + error.message);
   }
 }
 
