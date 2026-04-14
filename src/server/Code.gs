@@ -14,11 +14,22 @@ const NETLIFY_SECRET = "reych-secret-2024-xyzabc123"; // Debe coincidir con vari
 function doPost(e) {
   try {
     Logger.log('=== FORM SUBMISSION RECEIVED ===');
-    Logger.log('Payload: ' + e.postData.contents);
+    Logger.log('Event object: ' + JSON.stringify(e));
 
-    const payload = JSON.parse(e.postData.contents);
+    // Intentar acceder a postData
+    let payload;
+    if (e && e.postData && e.postData.contents) {
+      Logger.log('Using e.postData.contents');
+      payload = JSON.parse(e.postData.contents);
+    } else if (e && e.postData && e.postData.text) {
+      Logger.log('Using e.postData.text');
+      payload = JSON.parse(e.postData.text);
+    } else {
+      Logger.log('ERROR: No valid postData found. Available keys: ' + Object.keys(e));
+      return buildResponse(false, 'No data received');
+    }
+
     const formData = payload.data;
-
     Logger.log('Form Data: ' + JSON.stringify(formData));
 
     // Validar campos requeridos
@@ -90,12 +101,10 @@ function buildResponse(success, data) {
     };
   }
 
-  // No se pueden encadenar los métodos en Google Apps Script
+  // Retornar respuesta JSON simple
+  // Los headers CORS se manejan en el frontend con mode: 'no-cors'
   const output = ContentService.createTextOutput(JSON.stringify(response));
   output.setMimeType(ContentService.MimeType.JSON);
-  output.setHeader('Access-Control-Allow-Origin', '*');
-  output.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  output.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   return output;
 }
 
