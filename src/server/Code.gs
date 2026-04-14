@@ -29,11 +29,11 @@ function doPost(e) {
 
     // Guardar en Google Sheets
     const ss = SpreadsheetApp.openById(SHEET_ID);
-    let sheet = ss.getSheetByName('Contactos');
+    let sheet = ss.getSheetByName('Contactos Landing');
 
     if (!sheet) {
-      Logger.log('Creating new sheet: Contactos');
-      sheet = ss.insertSheet('Contactos');
+      Logger.log('Creating new sheet: Contactos Landing');
+      sheet = ss.insertSheet('Contactos Landing');
       sheet.appendRow([
         'Fecha',
         'Nombre',
