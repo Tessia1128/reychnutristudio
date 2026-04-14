@@ -9,14 +9,14 @@ const SHEET_ID = "17ub7gbSBi70DTidbID3jM-ZLLD69lu2JxlxAbCSwykQ";
 const NETLIFY_SECRET = "reych-secret-2024-xyzabc123"; // Debe coincidir con variable de Netlify
 
 /**
- * Endpoint POST para procesar el formulario
+ * Endpoint GET para procesar el formulario (parámetros en URL)
  */
-function doPost(e) {
+function doGet(e) {
   try {
     Logger.log('=== FORM SUBMISSION RECEIVED ===');
     Logger.log('Parameters: ' + JSON.stringify(e.parameter));
 
-    // Extraer datos de los parámetros (form-urlencoded)
+    // Extraer datos de los parámetros (de la URL)
     const formData = {
       name: e.parameter.name,
       email: e.parameter.email,
