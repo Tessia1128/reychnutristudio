@@ -1,0 +1,20 @@
+{
+  "name": "reych-landing-page",
+  "version": "1.0.0",
+  "description": "REYCH landing page powered by Google Apps Script",
+  "scripts": {
+    "build": "mkdir -p dist && cp src/client/* dist/ 2>/dev/null || true && echo 'Frontend built'",
+    "deploy": "npm run build && echo 'Ready for Netlify deployment'",
+    "dev": "echo 'Use Google Apps Script editor at script.google.com for local dev'",
+    "push": "clasp push",
+    "pull": "clasp pull",
+    "deploy-gas": "clasp deploy && echo 'Apps Script deployed. Get deployment ID from clasp deployments'"
+  },
+  "keywords": [
+    "google-apps-script",
+    "netlify",
+    "landing-page"
+  ],
+  "author": "Adrián",
+  "license": "MIT"
+}
