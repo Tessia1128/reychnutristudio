@@ -14,22 +14,18 @@ const NETLIFY_SECRET = "reych-secret-2024-xyzabc123"; // Debe coincidir con vari
 function doPost(e) {
   try {
     Logger.log('=== FORM SUBMISSION RECEIVED ===');
-    Logger.log('Event object: ' + JSON.stringify(e));
+    Logger.log('Parameters: ' + JSON.stringify(e.parameter));
 
-    // Intentar acceder a postData
-    let payload;
-    if (e && e.postData && e.postData.contents) {
-      Logger.log('Using e.postData.contents');
-      payload = JSON.parse(e.postData.contents);
-    } else if (e && e.postData && e.postData.text) {
-      Logger.log('Using e.postData.text');
-      payload = JSON.parse(e.postData.text);
-    } else {
-      Logger.log('ERROR: No valid postData found. Available keys: ' + Object.keys(e));
-      return buildResponse(false, 'No data received');
-    }
+    // Extraer datos de los parámetros (form-urlencoded)
+    const formData = {
+      name: e.parameter.name,
+      email: e.parameter.email,
+      phone: e.parameter.phone,
+      country: e.parameter.country,
+      subject: e.parameter.subject,
+      message: e.parameter.message
+    };
 
-    const formData = payload.data;
     Logger.log('Form Data: ' + JSON.stringify(formData));
 
     // Validar campos requeridos

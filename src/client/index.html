@@ -958,13 +958,22 @@
     formMessage.style.display = 'none';
 
     // Llamar al Apps Script via fetch
+    // Usar application/x-www-form-urlencoded en lugar de JSON
+    const urlParams = new URLSearchParams();
+    urlParams.append('name', formData.name);
+    urlParams.append('email', formData.email);
+    urlParams.append('phone', formData.phone);
+    urlParams.append('country', formData.country);
+    urlParams.append('subject', formData.subject);
+    urlParams.append('message', formData.message);
+
     fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
-      body: JSON.stringify({ data: formData })
+      body: urlParams.toString()
     })
       .then(response => {
         // Con mode: 'no-cors' no podemos leer la respuesta
