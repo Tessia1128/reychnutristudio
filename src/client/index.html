@@ -794,6 +794,62 @@
   </div>
 </section>
 
+<!-- CONTACTO -->
+<section class="custom" id="contacto">
+  <div class="custom-inner">
+    <div class="section-pill r">💌 Contacto</div>
+    <h2 class="r">¿Preguntas o <span>consultas</span>?</h2>
+    <p class="r d1">
+      Llena el formulario y me pondré en contacto lo antes posible.
+    </p>
+
+    <div class="form-container r d2" style="max-width: 500px; margin: 0 auto;">
+      <form id="contactForm" style="display: flex; flex-direction: column; gap: 14px;">
+        <input
+          type="text"
+          id="name"
+          placeholder="Tu nombre"
+          required
+          style="padding: 12px 16px; border: 1px solid rgba(23,38,116,0.2); border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.95rem;"
+        >
+        <input
+          type="email"
+          id="email"
+          placeholder="Tu email"
+          required
+          style="padding: 12px 16px; border: 1px solid rgba(23,38,116,0.2); border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.95rem;"
+        >
+        <input
+          type="tel"
+          id="phone"
+          placeholder="Tu teléfono"
+          required
+          style="padding: 12px 16px; border: 1px solid rgba(23,38,116,0.2); border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.95rem;"
+        >
+        <textarea
+          id="message"
+          placeholder="Cuéntame sobre tu consulta..."
+          rows="4"
+          required
+          style="padding: 12px 16px; border: 1px solid rgba(23,38,116,0.2); border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.95rem; resize: vertical;"
+        ></textarea>
+
+        <button
+          type="submit"
+          id="submitBtn"
+          style="padding: 14px 32px; background: linear-gradient(135deg, #7cb4f1, #5a9de8); color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;"
+          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 24px rgba(124,180,241,0.3)'"
+          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
+        >
+          Enviar ✨
+        </button>
+
+        <div id="formMessage" style="text-align: center; font-size: 0.9rem; display: none; margin-top: 8px;"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
 <!-- REDES -->
 <section class="redes" id="redes">
   <div class="redes-inner">
@@ -846,6 +902,74 @@
     d.style.fontSize = (1.5 + Math.random()*2) + 'rem';
     bg.appendChild(d);
   }
+
+  // Formulario de contacto
+  const form = document.getElementById('contactForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const formMessage = document.getElementById('formMessage');
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-tb04vJXHVoogKpMy3vvz0Po1nBpQzqv4un0q2UQK_A9oQrCDpoBiBCKUD_48qlXWhQ/exec';
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const formData = {
+      name: document.getElementById('name').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      message: document.getElementById('message').value.trim()
+    };
+
+    // Validar campos requeridos
+    if (!formData.name || !formData.email || !formData.phone || !formData.message) {
+      formMessage.style.color = '#ef4444';
+      formMessage.textContent = '❌ Por favor completa todos los campos';
+      formMessage.style.display = 'block';
+      return;
+    }
+
+    // Mostrar estado "enviando"
+    submitBtn.disabled = true;
+    submitBtn.textContent = '⏳ Enviando...';
+    formMessage.style.display = 'none';
+
+    // Construir URL con parámetros
+    const params = new URLSearchParams({
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      message: formData.message
+    });
+
+    const fullUrl = APPS_SCRIPT_URL + '?' + params.toString();
+
+    // Hacer solicitud al Apps Script
+    fetch(fullUrl, {
+      method: 'GET',
+      mode: 'cors'
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          formMessage.style.color = '#4ade80';
+          formMessage.textContent = '✅ ¡Mensaje recibido! Pronto me pondré en contacto.';
+          form.reset();
+        } else {
+          formMessage.style.color = '#ef4444';
+          formMessage.textContent = '❌ ' + (data.message || 'Error al enviar');
+        }
+        formMessage.style.display = 'block';
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        formMessage.style.color = '#ef4444';
+        formMessage.textContent = '❌ Error al enviar: ' + error.message;
+        formMessage.style.display = 'block';
+      })
+      .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Enviar ✨';
+      });
+  });
 
 </script>
 </body>
