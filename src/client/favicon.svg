@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Cuerpo de la fresa (rojo) -->
+  <ellipse cx="32" cy="38" rx="22" ry="24" fill="#EF1833"/>
+
+  <!-- Puntas de la fresa (más oscuro) -->
+  <path d="M 20 55 Q 15 50 12 45 Q 10 55 15 62 Q 20 65 25 62" fill="#D81B31"/>
+  <path d="M 44 55 Q 49 50 52 45 Q 54 55 49 62 Q 44 65 39 62" fill="#D81B31"/>
+
+  <!-- Semillas amarillas -->
+  <circle cx="20" cy="32" r="2" fill="#FFC700"/>
+  <circle cx="32" cy="28" r="2" fill="#FFC700"/>
+  <circle cx="44" cy="32" r="2" fill="#FFC700"/>
+  <circle cx="26" cy="42" r="2" fill="#FFC700"/>
+  <circle cx="38" cy="42" r="2" fill="#FFC700"/>
+  <circle cx="32" cy="52" r="2" fill="#FFC700"/>
+  <circle cx="20" cy="48" r="2" fill="#FFC700"/>
+  <circle cx="44" cy="48" r="2" fill="#FFC700"/>
+
+  <!-- Hojas verdes arriba -->
+  <g fill="#4CAF50">
+    <ellipse cx="18" cy="12" rx="4" ry="8" transform="rotate(-35 18 12)"/>
+    <ellipse cx="32" cy="6" rx="4" ry="10"/>
+    <ellipse cx="46" cy="12" rx="4" ry="8" transform="rotate(35 46 12)"/>
+  </g>
+
+  <!-- Tallo -->
+  <rect x="30" y="10" width="4" height="12" fill="#4CAF50" rx="2"/>
+</svg>
