@@ -6,7 +6,13 @@
       "Bash(npm install:*)",
       "Bash(clasp login:*)",
       "Bash(git init:*)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(curl -s \"https://script.google.com/macros/d/1BcoGRhbIBZEUJtRFlw76kxOzAaZNTwoEGVXrFo8-PMcMo7zRM5dK70s3/usercontent/v1/?path=status\")",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "Bash(python -m http.server 8000)",
+      "WebFetch(domain:ibb.co)",
+      "Bash(npm run:*)",
+      "Bash(gh repo:*)"
     ]
   }
 }
