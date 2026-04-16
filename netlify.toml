@@ -1,29 +1,6 @@
-# Netlify configuration for REYCH landing page
-# Frontend: served by Netlify
-# Backend: Google Apps Script (via secrets)
-
-[build]
-  # Frontend build directory (if you have any build process)
-  # For now, we serve static HTML from src/client
-  publish = "dist"
-  command = "npm run build"
-
-# Redirect all API calls to Apps Script backend
-[[redirects]]
-  from = "/api/*"
-  to = "https://script.google.com/macros/d/:APPS_SCRIPT_ID/usercontent/v1/api/*"
-  status = 200
-  force = false
-
-# Environment variables for deployment
-[context.production.environment]
-  APPS_SCRIPT_DEPLOYMENT_ID = ""
-  APPS_SCRIPT_ID = ""
-
-[context.deploy-preview.environment]
-  APPS_SCRIPT_DEPLOYMENT_ID = ""
-  APPS_SCRIPT_ID = ""
-
-[context.branch-deploy.environment]
-  APPS_SCRIPT_DEPLOYMENT_ID = ""
-  APPS_SCRIPT_ID = ""
+# DEPRECATED: This file was used for Netlify deployment
+# Project has been migrated to GitHub Pages + GitHub Actions
+# See .github/workflows/deploy-pages.yml for current deployment configuration
+#
+# Frontend: served by GitHub Pages
+# Backend: Google Apps Script (via direct API calls)
